@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import GoalInput from './components/input';
+import GoalItem from './components/items';
 
 export default function App() {
 
@@ -12,24 +14,24 @@ export default function App() {
     console.log(textInput)
   }
   const addGoal = (input) => {
-    setGoals(goals => [...goals, {text: input, key: Math.random().toString()}]);//it is better practice to use arrow function then spread operator by itself
+    setGoals(currentGoals => [...currentGoals, {text: input, key: Math.random().toString()}]);//it is better practice to use arrow function then spread operator by itself
     setInput("");
+    console.log(goals)
+  }
+  const deleteItem = (key)=>{
+    setGoals((currentGoals)=>{
+      return currentGoals.filter((goal)=> goal.key !== key)
+    })
+    console.log('delete')
   }
 
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="What's your goal?"
-          onChangeText={textValueHandler}
-          value={input}
-        />
-
-        <Button onPress={() => addGoal(input)} title="Add" />
-
-      </View>
+   <GoalInput addGoal={addGoal} 
+   textValueHandler={textValueHandler}
+    input={input}
+/>
 
       <View style={styles.listContainer}>
         <Text style={styles.headerOfList}>List of goals</Text>
@@ -46,11 +48,9 @@ export default function App() {
          
           }
           {goals.map((goal) => {
-            return (
-              <View key={goal.key} style={styles.individualGoals}>
-                <Text style={{ color: 'white' }} > {goal.text} </Text> 
-              </View>)
+            return  <GoalItem goal={goal}   deleteItem={deleteItem}/>
           })}
+
         </ScrollView>
       </View>
 
@@ -65,24 +65,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     flex: 1
   },
-  inputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderBottomWidth: 2,
-    borderBottomColor: "blue",
-    marginBottom: 20,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "gray",
-    width: "70%",
-    paddingVertical: 0,
-    paddingHorizontal: 4,
-
-
-  },
+ 
   listContainer: {
     flex: 4,
     width: "100%",
@@ -97,20 +80,5 @@ const styles = StyleSheet.create({
 
 
   },
-  individualGoals: {
-    backgroundColor: "blue",
-    fontSize: 20,
-    color: "white",
-    padding: 4,
-    marginBottom: 2,
-    minWidth: 100,
-
-    textAlign: "center",
-    borderWidth: 1,
-    borderColor: "lightblue",
-    borderRadius: 10,//rounded corners will be missing on iOS
-    //we would have to wrap our text into view and add the styles to the view and make text into nested element
-    //then we would have to add style eg color to the text separately (NO cascading style inheritence)
-  },
-
+  
 });
