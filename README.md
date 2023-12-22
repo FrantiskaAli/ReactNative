@@ -3,7 +3,6 @@
 
 ## Table of content
 - [Installation](#Installation)
-- [Usage](#Usage)
 - [License](#License)
 - [Questions](#Questions)
 ## Description
